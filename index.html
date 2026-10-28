@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a100e" />
+  <meta name="color-scheme" content="light" />
+  <meta name="description" content="A phone-first Italian weather game. Say the weather out loud to Nonna, like a video call." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Nonna" />
+  <title>Che tempo fa, Nonna?</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="stage">
+    <main class="phone" id="app">
+      <section id="screen-home" class="screen">
+        <div class="hero">
+          <div id="home-scene" class="scene-host"></div>
+          <p class="live-pill"><span class="dot"></span> Nonna is free</p>
+        </div>
+        <div class="sheet">
+          <p class="kicker">A call from Lecce</p>
+          <h1>Che tempo fa,<br /><em>Nonna?</em></h1>
+          <svg class="squiggle" viewBox="0 0 140 14" aria-hidden="true">
+            <path d="M2 9 Q 18 2 32 9 T 62 9 T 92 8 T 138 6" fill="none" stroke="#e2ae3a" stroke-width="3.5" stroke-linecap="round" />
+          </svg>
+          <p class="lede">Practice Italian weather words out loud — like a video call with Nonna.</p>
+          <p class="stars-pill" id="stars-pill">No stars yet — Nonna is waiting</p>
+          <p class="calls-line" id="calls-line"></p>
+          <div id="mastered-wrap" class="mastered-wrap" hidden>
+            <p class="mastered-label">First-try words</p>
+            <div id="mastered" class="pills"></div>
+          </div>
+          <form id="home-form">
+            <p class="field-label">How will you answer?</p>
+            <div class="mode-pick" role="group" aria-label="How you answer">
+              <button type="button" id="mode-speak" aria-pressed="false">
+                <strong>Speak it</strong>
+                <small>out loud</small>
+              </button>
+              <button type="button" id="mode-tap" aria-pressed="true">
+                <strong>Tap it</strong>
+                <small>four phrases</small>
+              </button>
+            </div>
+            <p class="mode-note" id="mode-note"></p>
+            <div id="name-wrap" class="name-wrap">
+              <label for="name-input">What should Nonna call you?</label>
+              <input id="name-input" name="given-name" autocomplete="given-name" enterkeyhint="go" maxlength="18" placeholder="Arianna" />
+            </div>
+            <p id="greet-line" class="greet" hidden></p>
+            <button type="button" id="change-name" class="text-btn" hidden>Change name</button>
+            <button type="submit" id="call-btn" class="primary">Call Nonna</button>
+          </form>
+          <details class="words">
+            <summary>Peek at the words</summary>
+            <ul id="word-list"></ul>
+          </details>
+          <p class="fine">Stars stay on this phone. Tapping works offline, even if the mic says no.</p>
+        </div>
+      </section>
+
+      <section id="screen-ring" class="screen" hidden>
+        <div class="video-slot fill">
+          <div id="ring-scene" class="scene-host"></div>
+          <div class="ring-ui">
+            <p class="ring-kicker">incoming video call</p>
+            <h2>Nonna</h2>
+            <p class="ring-place">Lecce, Italy</p>
+            <div class="ring-actions">
+              <button type="button" id="decline-btn" class="round decline">
+                <span class="round-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.5.6 3.6.1.4 0 .7-.3 1L6.6 10.8z"/></svg>
+                </span>
+                Decline
+              </button>
+              <button type="button" id="answer-btn" class="round answer">
+                <span class="round-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.5.6 3.6.1.4 0 .7-.3 1L6.6 10.8z"/></svg>
+                </span>
+                Answer
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-call" class="screen" hidden>
+        <div class="video-slot">
+          <div id="call-scene" class="scene-host"></div>
+          <header class="call-bar">
+            <button type="button" id="end-btn" class="icon-btn end" aria-label="End call">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.5.6 3.6.1.4 0 .7-.3 1L6.6 10.8z"/></svg>
+            </button>
+            <div class="call-id">
+              <strong>Nonna</strong>
+              <span>Lecce · <span id="call-timer">00:00</span></span>
+            </div>
+            <div class="call-tools">
+              <span class="star-pill">★ <span id="call-stars">0</span></span>
+              <button type="button" id="mute-btn" class="icon-btn" aria-pressed="false" aria-label="Mute Nonna">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a6.99 6.99 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
+              </button>
+            </div>
+          </header>
+          <div class="subtitle">
+            <span class="who">Nonna</span>
+            <p id="subtitle-text" lang="it"></p>
+          </div>
+          <div class="self-pip" id="self-pip" aria-hidden="true"><span>A</span><small>You</small></div>
+        </div>
+        <div class="panel">
+          <div class="grabber" aria-hidden="true"></div>
+          <div class="bar" aria-hidden="true"><span id="bar-fill"></span></div>
+          <div class="panel-body">
+            <p class="eyebrow" id="eyebrow"></p>
+            <h2 class="english" id="english"></h2>
+            <p class="task" id="task"></p>
+            <div id="model" class="model" hidden>
+              <p class="model-it" id="model-it" lang="it"></p>
+              <p class="phonetic" id="phonetic"></p>
+            </div>
+            <p id="hint" class="hint" hidden></p>
+            <p id="heard-line" class="heard" hidden></p>
+            <p id="note" class="note" hidden></p>
+            <div id="nudge" class="nudge" hidden>
+              <p class="nudge-it" id="nudge-it" lang="it"></p>
+              <p class="nudge-en" id="nudge-en"></p>
+            </div>
+            <div id="feedback" class="feedback" hidden>
+              <p class="streak" id="streak" hidden></p>
+              <p class="stars" id="stars-now"></p>
+              <p class="praise" id="praise" lang="it"></p>
+              <p class="praise-en" id="praise-en"></p>
+              <p class="tip" id="tip"></p>
+            </div>
+          </div>
+          <div class="dock">
+            <button type="button" id="mic-btn" class="mic-btn" hidden>
+              <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21H9v2h6v-2h-2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+              <span id="mic-label">Tap to speak</span>
+            </button>
+            <div id="chips" class="chips" hidden></div>
+            <button type="button" id="teach-btn" class="teach-btn" hidden></button>
+            <button type="button" id="hear-btn" class="text-btn" hidden>Hear it again</button>
+            <button type="button" id="switch-btn" class="secondary" hidden>Or tap a phrase</button>
+            <button type="button" id="next-btn" class="primary" hidden>Next</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-end" class="screen" hidden>
+        <div class="end-hero">
+          <div id="end-scene" class="scene-host"></div>
+        </div>
+        <div class="sheet end-sheet">
+          <p class="kicker">Call ended</p>
+          <h2 id="end-title" class="end-title">Ciao ciao.</h2>
+          <p class="end-love" id="end-love" lang="it">Anch’io ti voglio bene.</p>
+          <p class="end-en">I love you too.</p>
+          <p class="end-score" id="end-score"></p>
+          <p class="end-saved" id="end-saved"></p>
+          <p class="end-perfect" id="end-perfect" hidden></p>
+          <details class="words recap-wrap">
+            <summary>How this call went</summary>
+            <ol id="recap" class="recap"></ol>
+          </details>
+          <button type="button" id="again-btn" class="primary">Call Nonna again</button>
+          <button type="button" id="home-btn" class="secondary">Back home</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="leave-dialog">
+    <h3 id="leave-title">Hang up on Nonna?</h3>
+    <p id="leave-body">Stars you've already earned stay on this phone.</p>
+    <div class="dialog-actions">
+      <button type="button" id="stay-btn" class="primary">Keep playing</button>
+      <button type="button" id="leave-btn" class="secondary">Hang up</button>
+    </div>
+  </dialog>
+
+  <div id="live" class="sr-only" aria-live="polite"></div>
+
+  <template id="scene-template">
+    <div class="scene" data-weather="sunny" data-mood="smile" role="img" aria-label="Nonna on her sunny balcony">
+      <div class="sky"></div>
+      <div class="sun" aria-hidden="true"></div>
+      <div class="heat" aria-hidden="true"></div>
+      <svg class="art art-back" viewBox="0 0 360 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <g class="layer-outdoor">
+          <rect x="0" y="168" width="360" height="48" fill="#3e86b4" />
+          <rect x="0" y="168" width="360" height="5" fill="#d7f3ff" opacity="0.7" />
+          <ellipse cx="48" cy="186" rx="78" ry="26" fill="#6f9a62" />
+          <ellipse cx="318" cy="184" rx="70" ry="22" fill="#7eaa70" />
+          <g fill="#f0d2ae">
+            <rect x="18" y="142" width="22" height="40" />
+            <rect x="42" y="126" width="30" height="56" />
+            <rect x="74" y="138" width="20" height="44" />
+            <rect x="248" y="146" width="26" height="36" />
+            <rect x="278" y="134" width="34" height="48" />
+            <rect x="316" y="150" width="22" height="32" />
+          </g>
+          <rect x="48" y="112" width="16" height="22" fill="#f7f1e4" />
+          <ellipse cx="56" cy="112" rx="12" ry="9" fill="#fffaf2" />
+          <path d="M56 96 v10 M51 101 h10" stroke="#c9b48a" stroke-width="2" />
+          <path d="M42 126 L57 110 L72 126" fill="#c45c48" />
+          <path d="M278 134 L295 118 L312 134" fill="#c45c48" />
+          <g fill="#ffe7a0">
+            <rect x="50" y="146" width="5" height="7" />
+            <rect x="60" y="146" width="5" height="7" />
+            <rect x="50" y="160" width="5" height="7" />
+            <rect x="60" y="160" width="5" height="7" />
+            <rect x="286" y="150" width="6" height="8" />
+            <rect x="298" y="150" width="6" height="8" />
+            <rect x="256" y="158" width="5" height="7" />
+          </g>
+          <g class="wash">
+            <path d="M200 118 H338" stroke="#f4efe8" stroke-width="2" />
+            <path class="sheet-cloth" d="M230 118 l6 28 h18 l6 -28" fill="#fbf8f3" stroke="#e4d9cc" />
+          </g>
+        </g>
+      </svg>
+      <div class="clouds" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="rain" aria-hidden="true"></div>
+      <div class="snow" aria-hidden="true"></div>
+      <div class="wind-lines" aria-hidden="true"></div>
+      <svg class="art art-front" viewBox="0 0 360 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <g class="layer-kitchen">
+          <rect x="16" y="150" width="96" height="72" rx="6" fill="#8ec6e6" />
+          <path d="M64 150 V222 M16 186 H112" stroke="#f7f1e6" stroke-width="6" />
+          <rect x="250" y="168" width="92" height="8" rx="2" fill="#c48a5a" />
+          <rect x="262" y="142" width="16" height="26" rx="3" fill="#e7efe4" />
+          <rect x="286" y="136" width="18" height="32" rx="3" fill="#f0d0c0" />
+          <rect x="312" y="146" width="14" height="22" rx="3" fill="#f6e7a8" />
+        </g>
+        <rect class="floor" x="0" y="356" width="360" height="64" fill="#e08962" />
+        <g class="floor-lines" stroke="#c4623c" stroke-width="2" opacity="0.4">
+          <path d="M0 374 H360 M0 392 H360 M0 410 H360" />
+        </g>
+        <g class="nonna">
+          <ellipse cx="180" cy="248" rx="56" ry="62" fill="#efe6dc" />
+          <circle cx="180" cy="190" r="20" fill="#e4dbd1" />
+          <circle cx="180" cy="186" r="13" fill="#f4eee6" />
+          <circle cx="196" cy="184" r="4" fill="#e36b5a" />
+          <ellipse cx="126" cy="252" rx="8" ry="11" fill="#f0c0a0" />
+          <ellipse cx="234" cy="252" rx="8" ry="11" fill="#f0c0a0" />
+          <circle cx="124" cy="266" r="5" fill="#e2b340" stroke="#a6842e" stroke-width="1" />
+          <circle cx="236" cy="266" r="5" fill="#e2b340" stroke="#a6842e" stroke-width="1" />
+          <rect x="164" y="286" width="32" height="26" rx="10" fill="#f0c0a0" />
+          <path d="M146 314 Q180 338 214 314 L230 404 L130 404 Z" fill="#15756f" />
+          <path class="shawl" d="M122 312 Q180 292 238 312 L250 372 L110 372 Z" fill="#e36a55" />
+          <path class="apron" d="M156 318 H204 L210 400 H150 Z" fill="#f7f1e8" />
+          <path class="apron" d="M170 308 H190 V320 H170 Z" fill="#f7f1e8" />
+          <path class="scarf" d="M138 304 Q180 332 222 304 Q204 318 180 314 Q156 318 138 304 Z" fill="#c64732" />
+          <ellipse cx="180" cy="250" rx="44" ry="50" fill="#f6c7ab" />
+          <path d="M140 230 Q180 204 220 230 Q198 220 180 218 Q162 220 140 230 Z" fill="#efe6dc" />
+          <ellipse cx="152" cy="262" rx="12" ry="7" fill="#f0a090" opacity="0.55" />
+          <ellipse cx="208" cy="262" rx="12" ry="7" fill="#f0a090" opacity="0.55" />
+          <path d="M150 232 Q164 224 176 232" fill="none" stroke="#b08978" stroke-width="2.2" stroke-linecap="round" />
+          <path d="M184 232 Q196 224 210 232" fill="none" stroke="#b08978" stroke-width="2.2" stroke-linecap="round" />
+          <g class="eyes-normal">
+            <ellipse cx="164" cy="248" rx="4.4" ry="5" fill="#3d342c" />
+            <ellipse cx="198" cy="248" rx="4.4" ry="5" fill="#3d342c" />
+            <circle cx="165.6" cy="246.4" r="1.4" fill="#fff" />
+            <circle cx="199.6" cy="246.4" r="1.4" fill="#fff" />
+          </g>
+          <path class="eyes-joy" d="M154 250 Q164 240 174 250" fill="none" stroke="#3d342c" stroke-width="2.5" stroke-linecap="round" />
+          <path class="eyes-joy" d="M186 250 Q196 240 206 250" fill="none" stroke="#3d342c" stroke-width="2.5" stroke-linecap="round" />
+          <path d="M180 252 Q186 264 176 268" fill="none" stroke="#e0aa8c" stroke-width="2" stroke-linecap="round" />
+          <path class="mouth mouth-smile" d="M160 274 Q180 290 200 274" fill="none" stroke="#c4535c" stroke-width="2.7" stroke-linecap="round" />
+          <path class="mouth mouth-love" d="M162 272 Q180 294 198 272 Q180 284 162 272 Z" fill="#c4535c" />
+          <path class="mouth mouth-hmm" d="M164 278 Q180 272 198 280" fill="none" stroke="#c4535c" stroke-width="2.6" stroke-linecap="round" />
+          <path d="M132 258 Q138 270 132 278" fill="none" stroke="#e7b49a" stroke-width="1.3" stroke-linecap="round" />
+          <path d="M228 258 Q222 270 228 278" fill="none" stroke="#e7b49a" stroke-width="1.3" stroke-linecap="round" />
+        </g>
+        <g class="layer-outdoor railing">
+          <rect x="8" y="326" width="344" height="8" rx="3" fill="#3a3330" />
+          <path stroke="#3a3330" stroke-width="3.2" d="M20 334 V378 M38 334 V378 M56 334 V378 M74 334 V378 M92 334 V378 M110 334 V378 M128 334 V378 M146 334 V378 M164 334 V378 M182 334 V378 M200 334 V378 M218 334 V378 M236 334 V378 M254 334 V378 M272 334 V378 M290 334 V378 M308 334 V378 M326 334 V378 M344 334 V378" />
+        </g>
+        <g class="hands layer-outdoor">
+          <ellipse cx="148" cy="330" rx="13" ry="8" fill="#f3c4a8" />
+          <ellipse cx="214" cy="330" rx="13" ry="8" fill="#f3c4a8" />
+        </g>
+        <g class="layer-outdoor plant">
+          <rect x="16" y="336" width="34" height="22" rx="4" fill="#c45c3e" />
+          <ellipse cx="33" cy="328" rx="20" ry="11" fill="#2f7d4e" />
+          <ellipse cx="24" cy="322" rx="10" ry="8" fill="#3e9a5c" />
+          <circle cx="22" cy="316" r="4" fill="#e23d4a" />
+          <circle cx="34" cy="312" r="4.5" fill="#ef4d55" />
+          <circle cx="44" cy="320" r="3.5" fill="#d23b55" />
+        </g>
+        <g class="layer-outdoor bougainvillea">
+          <ellipse cx="326" cy="300" rx="28" ry="16" fill="#2c7a4c" />
+          <ellipse cx="308" cy="312" rx="16" ry="12" fill="#348a56" />
+          <circle cx="300" cy="292" r="6" fill="#e45486" />
+          <circle cx="318" cy="284" r="7" fill="#f06a98" />
+          <circle cx="336" cy="292" r="6" fill="#d94678" />
+          <circle cx="326" cy="304" r="5" fill="#e85b90" />
+          <circle cx="308" cy="304" r="4.5" fill="#f27aa4" />
+          <rect x="314" y="324" width="22" height="18" rx="4" fill="#c45c3e" />
+        </g>
+        <g class="layer-kitchen front-kitchen">
+          <rect x="0" y="318" width="112" height="48" rx="4" fill="#8d5a3c" />
+          <rect x="0" y="312" width="112" height="12" fill="#a56b48" />
+          <rect x="36" y="292" width="44" height="26" rx="6" fill="#c4483a" />
+          <rect x="32" y="286" width="52" height="8" rx="2" fill="#eceff1" />
+          <rect x="24" y="300" width="12" height="5" rx="2" fill="#d5dbde" />
+          <rect x="80" y="300" width="12" height="5" rx="2" fill="#d5dbde" />
+          <g class="steam-svg">
+            <circle cx="58" cy="270" r="4" fill="#fff" opacity="0.75" />
+            <circle cx="70" cy="258" r="5" fill="#fff" opacity="0.5" />
+            <circle cx="50" cy="252" r="3.5" fill="#fff" opacity="0.4" />
+          </g>
+        </g>
+      </svg>
+      <div class="fog" aria-hidden="true"></div>
+      <svg class="bolt" viewBox="0 0 80 140" aria-hidden="true">
+        <polygon points="50,0 16,64 38,64 20,140 74,50 48,50 66,0" fill="#fff6c8" />
+      </svg>
+      <div class="flash" aria-hidden="true"></div>
+    </div>
+  </template>
+
+  <noscript>
+    <p class="noscript">This call needs JavaScript. Turn it on, then open the page again.</p>
+  </noscript>
+
+  <script src="js/vocab.js"></script>
+  <script src="js/match.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

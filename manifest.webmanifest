@@ -1,0 +1,17 @@
+{
+  "name": "Che tempo fa, Nonna?",
+  "short_name": "Nonna",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#1a100e",
+  "theme_color": "#1a100e",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
