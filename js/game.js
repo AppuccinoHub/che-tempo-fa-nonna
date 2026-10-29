@@ -16,16 +16,16 @@
     { it: "Non proprio, amore.", en: "Not quite — have another go." }
   ];
   var SCENE_LABEL = {
-    sunny: "Nonna on her sunny balcony",
-    hot: "Nonna on her balcony in the heat",
-    rain: "Rain on Nonna’s balcony",
-    storm: "A thunderstorm over Nonna’s balcony",
-    snow: "Snow falling on Nonna’s balcony",
-    cold: "A cold day on Nonna’s balcony",
-    cloudy: "Clouds over Nonna’s balcony",
-    wind: "Wind on Nonna’s balcony",
-    fog: "Fog around Nonna’s balcony",
-    kitchen: "Nonna in her kitchen"
+    sunny: "Nonna calling from Monte di Procida on a sunny day",
+    hot: "Nonna calling from Monte di Procida in the heat",
+    rain: "Rain while Nonna calls from Monte di Procida",
+    storm: "A thunderstorm while Nonna calls from Monte di Procida",
+    snow: "Snow while Nonna calls from Monte di Procida",
+    cold: "A cold day while Nonna calls from Monte di Procida",
+    cloudy: "Clouds over Monte di Procida as Nonna calls",
+    wind: "Wind while Nonna calls from Monte di Procida",
+    fog: "Fog around Monte di Procida as Nonna calls",
+    kitchen: "Nonna calling from Monte di Procida"
   };
   var EYEBROW = {
     weather: "Look outside",
@@ -258,9 +258,18 @@
     tone(392, 0.12, 0.02);
   }
 
+  function spokenLine(text) {
+    var raw = String(text).replace(/\s+/g, " ").trim();
+    if (/^ciao ciao/i.test(raw)) return raw;
+    if (/^ciao\b/i.test(raw)) {
+      return /arianna/i.test(raw) ? "Ciao, Arianna!" : "Ciao, tesoro!";
+    }
+    return raw;
+  }
+
   function say(text) {
     if (state.muted || !text) return;
-    NonnaSpeech.speak(text);
+    NonnaSpeech.speak(spokenLine(text));
   }
 
   function announce(text) {

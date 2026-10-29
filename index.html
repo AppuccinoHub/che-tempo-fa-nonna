@@ -11,7 +11,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Nonna" />
   <title>Che tempo fa, Nonna?</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="img/nonna-icon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="img/nonna-icon.png" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="css/app.css" />
 </head>
@@ -24,7 +25,7 @@
           <p class="live-pill"><span class="dot"></span> Nonna is free</p>
         </div>
         <div class="sheet">
-          <p class="kicker">A call from Lecce</p>
+          <p class="kicker">A call from Monte di Procida</p>
           <h1>Che tempo fa,<br /><em>Nonna?</em></h1>
           <svg class="squiggle" viewBox="0 0 140 14" aria-hidden="true">
             <path d="M2 9 Q 18 2 32 9 T 62 9 T 92 8 T 138 6" fill="none" stroke="#e2ae3a" stroke-width="3.5" stroke-linecap="round" />
@@ -71,7 +72,7 @@
           <div class="ring-ui">
             <p class="ring-kicker">incoming video call</p>
             <h2>Nonna</h2>
-            <p class="ring-place">Lecce, Italy</p>
+            <p class="ring-place">Monte di Procida, Italia</p>
             <div class="ring-actions">
               <button type="button" id="decline-btn" class="round decline">
                 <span class="round-icon" aria-hidden="true">
@@ -99,7 +100,7 @@
             </button>
             <div class="call-id">
               <strong>Nonna</strong>
-              <span>Lecce · <span id="call-timer">00:00</span></span>
+              <span>Monte di Procida · <span id="call-timer">00:00</span></span>
             </div>
             <div class="call-tools">
               <span class="star-pill">★ <span id="call-stars">0</span></span>
@@ -189,8 +190,9 @@
   <div id="live" class="sr-only" aria-live="polite"></div>
 
   <template id="scene-template">
-    <div class="scene" data-weather="sunny" data-mood="smile" role="img" aria-label="Nonna on her sunny balcony">
+    <div class="scene has-photo" data-weather="sunny" data-mood="smile" role="img" aria-label="Nonna calling from Monte di Procida">
       <div class="sky"></div>
+      <img class="nonna-photo" src="img/nonna.jpg" alt="" onerror="this.parentElement.classList.remove('has-photo');this.remove()" />
       <div class="sun" aria-hidden="true"></div>
       <div class="heat" aria-hidden="true"></div>
       <svg class="art art-back" viewBox="0 0 360 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
