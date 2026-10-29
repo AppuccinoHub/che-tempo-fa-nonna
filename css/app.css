@@ -615,6 +615,25 @@ dialog p { margin: 0 0 14px; line-height: 1.4; }
 
 /* Scene */
 .scene { position: absolute; inset: 0; overflow: hidden; background: #8ec8ef; }
+.nonna-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  z-index: 1;
+}
+.scene.has-photo .art,
+.scene.has-photo .sky { visibility: hidden; }
+.scene[data-weather="hot"] .nonna-photo { filter: saturate(1.06) brightness(1.03); }
+.scene[data-weather="rain"] .nonna-photo { filter: saturate(0.82) brightness(0.9); }
+.scene[data-weather="storm"] .nonna-photo { filter: saturate(0.62) brightness(0.6); }
+.scene[data-weather="snow"] .nonna-photo { filter: saturate(0.78) brightness(1.05); }
+.scene[data-weather="cold"] .nonna-photo { filter: saturate(0.76) brightness(1.02); }
+.scene[data-weather="cloudy"] .nonna-photo { filter: saturate(0.84) brightness(0.96); }
+.scene[data-weather="fog"] .nonna-photo { filter: saturate(0.55) brightness(1.08); }
+.scene[data-weather="kitchen"] .nonna-photo { filter: saturate(1.04) sepia(0.08); }
 .sky { position: absolute; inset: 0; transition: background 0.45s ease; }
 .scene[data-weather="sunny"] .sky { background: linear-gradient(#6ec5ef 0%, #b7e3f7 46%, #ffe3b0 100%); }
 .scene[data-weather="hot"] .sky { background: linear-gradient(#ff8d3a 0%, #ffd27a 55%, #f0b27a 100%); }
