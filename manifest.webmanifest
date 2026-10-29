@@ -9,7 +9,7 @@
   "icons": [
     {
       "src": "img/nonna-icon.png",
-      "sizes": "192x192",
+      "sizes": "256x256",
       "type": "image/png",
       "purpose": "any"
     }
