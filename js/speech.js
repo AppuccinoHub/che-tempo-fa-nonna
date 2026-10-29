@@ -199,7 +199,7 @@
   function speakOne(text, myToken) {
     const url = CLIPS[clipKey(text)];
     if (!url) return utter(text, myToken);
-    return playClip(url, myToken).then(function (status) {
+    return playClip(url + "?v=hub1", myToken).then(function (status) {
       if (status === "failed" && myToken === token) return utter(text, myToken);
     });
   }

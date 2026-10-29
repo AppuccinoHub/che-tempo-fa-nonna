@@ -3,6 +3,7 @@
   "use strict";
 
   var KEY = "che-tempo-nonna-v1";
+  var HUB = "https://appuccinohub.github.io/chiama-nonna/";
   var PRAISE = [
     { it: "Bravissima!", en: "That was lovely." },
     { it: "Esatto, tesoro!", en: "Exactly right." },
@@ -835,6 +836,22 @@
     state.timer = 0;
   }
 
+  function fromHub() {
+    try {
+      return new URLSearchParams(window.location.search).get("from") === "hub";
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function renderHubLinks() {
+    var hub = fromHub();
+    $("next-call").hidden = !hub;
+    $("back-hub").hidden = !hub;
+    $("more-calls").hidden = hub;
+    if (!hub) $("more-calls").href = HUB;
+  }
+
   function showSummary() {
     if (state.phase === "done") return;
     state.phase = "done";
@@ -1023,6 +1040,7 @@
     if (!NonnaSpeech.supported()) state.inputMode = "tap";
     renderMute();
     renderWordList();
+    renderHubLinks();
     renderHome();
     bind();
     NonnaSpeech.prime();
